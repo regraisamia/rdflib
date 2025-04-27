@@ -1,0 +1,79 @@
+@prefix univ: <http://example.org/university/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+# Départements
+univ:Mathematics a univ:Department ;
+    rdfs:label "Mathématiques" .
+
+univ:Physics a univ:Department ;
+    rdfs:label "Physique" .
+
+univ:ComputerScience a univ:Department ;
+    rdfs:label "Informatique" .
+
+# Filières
+univ:PureMath a univ:Field ;
+    rdfs:label "Mathématiques Pures" ;
+    univ:belongsTo univ:Mathematics .
+
+univ:AppliedMath a univ:Field ;
+    rdfs:label "Mathématiques Appliquées" ;
+    univ:belongsTo univ:Mathematics .
+
+univ:TheoreticalPhysics a univ:Field ;
+    rdfs:label "Physique Théorique" ;
+    univ:belongsTo univ:Physics .
+
+univ:ExperimentalPhysics a univ:Field ;
+    rdfs:label "Physique Expérimentale" ;
+    univ:belongsTo univ:Physics .
+
+univ:SoftwareEngineering a univ:Field ;
+    rdfs:label "Génie Logiciel" ;
+    univ:belongsTo univ:ComputerScience .
+
+# Étudiants
+univ:Alice a univ:Student ;
+    rdfs:label "Alice Dupont" ;
+    foaf:age "22" ;
+    univ:enrolledIn univ:PureMath .
+
+univ:Bob a univ:Student ;
+    rdfs:label "Bob Martin" ;
+    foaf:age "23" ;
+    univ:enrolledIn univ:AppliedMath .
+
+# Professeurs
+univ:DrSmith a univ:Teacher ;
+    rdfs:label "Dr. John Smith" ;
+    foaf:age "45" ;
+    univ:worksIn univ:Mathematics ;
+    univ:teaches univ:PureMath .
+
+univ:DrJones a univ:Teacher ;
+    rdfs:label "Dr. Emily Jones" ;
+    foaf:age "50" ;
+    univ:worksIn univ:Physics ;
+    univ:teaches univ:TheoreticalPhysics .
+
+# Chercheurs
+univ:DrBrown a univ:Researcher ;
+    rdfs:label "Dr. Michael Brown" ;
+    foaf:age "52" ;
+    univ:worksIn univ:Physics ;
+    univ:researchTopic "Quantum Mechanics" .
+
+# Cours
+univ:Calculus a univ:Course ;
+    rdfs:label "Calcul Intégral" ;
+    univ:offeredBy univ:PureMath .
+
+univ:Algebra a univ:Course ;
+    rdfs:label "Algèbre Linéaire" ;
+    univ:offeredBy univ:PureMath .
+
+univ:QuantumPhysics a univ:Course ;
+    rdfs:label "Physique Quantique" ;
+    univ:offeredBy univ:TheoreticalPhysics .

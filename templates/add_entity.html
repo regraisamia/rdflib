@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une Entité</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        // JavaScript pour afficher/masquer les champs en fonction du type d'entité sélectionné
+        document.addEventListener("DOMContentLoaded", function () {
+            const entityTypeSelect = document.getElementById("entity_type");
+            const departmentField = document.getElementById("department-field");
+            const fieldField = document.getElementById("field-field");
+            const courseField = document.getElementById("course-field");
+
+            function updateFields() {
+                const selectedType = entityTypeSelect.value;
+
+                // Masquer tous les champs par défaut
+                departmentField.style.display = "none";
+                fieldField.style.display = "none";
+                courseField.style.display = "none";
+
+                // Afficher les champs pertinents en fonction du type d'entité
+                if (selectedType === "Field") {
+                    departmentField.style.display = "block";
+                } else if (selectedType === "Student") {
+                    fieldField.style.display = "block";
+                } else if (selectedType === "Teacher" || selectedType === "Researcher") {
+                    departmentField.style.display = "block";
+                } else if (selectedType === "Course") {
+                    fieldField.style.display = "block";
+                }
+            }
+
+            // Mettre à jour les champs au chargement de la page
+            updateFields();
+
+            // Écouter les changements dans le menu déroulant
+            entityTypeSelect.addEventListener("change", updateFields);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Ajouter une Entité</h1>
+        <form action="/add" method="POST">
+            <label for="entity_type">Type d'entité :</label>
+            <select id="entity_type" name="entity_type" required>
+                <option value="" disabled selected>-- Sélectionnez un type --</option>
+                <option value="Department">Département</option>
+                <option value="Field">Filière</option>
+                <option value="Student">Étudiant</option>
+                <option value="Teacher">Professeur</option>
+                <option value="Researcher">Chercheur</option>
+                <option value="Course">Cours</option>
+            </select>
+
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" required>
+
+            <!-- Champ pour sélectionner un département -->
+            <div id="department-field" style="display: none;">
+                <label for="department">Département :</label>
+                <select id="department" name="department">
+                    <option value="">-- Sélectionnez un département --</option>
+                    {% for department in departments %}
+                        <option value="{{ department }}">{{ department.split('/')[-1].replace('_', ' ') }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Champ pour sélectionner une filière -->
+            <div id="field-field" style="display: none;">
+                <label for="field">Filière :</label>
+                <select id="field" name="field">
+                    <option value="">-- Sélectionnez une filière --</option>
+                    {% for field in fields %}
+                        <option value="{{ field }}">{{ field.split('/')[-1].replace('_', ' ') }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Champ pour sélectionner un cours -->
+            <div id="course-field" style="display: none;">
+                <label for="course">Cours :</label>
+                <select id="course" name="course">
+                    <option value="">-- Sélectionnez un cours --</option>
+                    {% for course in courses %}
+                        <option value="{{ course }}">{{ course.split('/')[-1].replace('_', ' ') }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit">Ajouter</button>
+        </form>
+        <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+    </div>
+</body>
+</html>

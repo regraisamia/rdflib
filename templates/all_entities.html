@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toutes les Entités</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Toutes les Entités</h1>
+
+        <ul>
+            {% for entity in entities %}
+                <li>
+                    {{ entity.subject }} - {{ entity.predicate }} - {{ entity.object }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Exporter les Données</h2>
+        <a href="/export/json">Exporter en JSON</a><br>
+        <a href="/export/xml">Exporter en XML</a><br>
+        <a href="/export/turtle">Exporter en Turtle</a>
+
+        <a href="/">Retour à l'accueil</a>
+    </div>
+</body>
+</html>
