@@ -31,8 +31,6 @@ def index():
     departments = list(graph.subjects(RDF.type, UNIV.Department))
     fields = list(graph.subjects(RDF.type, UNIV.Field))
     students = list(graph.subjects(RDF.type, UNIV.Student))
-    teachers = list(graph.subjects(RDF.type, UNIV.Teacher))
-    researchers = list(graph.subjects(RDF.type, UNIV.Researcher))
     courses = list(graph.subjects(RDF.type, UNIV.Course))
 
     return render_template(
@@ -40,8 +38,6 @@ def index():
         departments=departments,
         fields=fields,
         students=students,
-        teachers=teachers,
-        researchers=researchers,
         courses=courses
     )
 
@@ -116,18 +112,7 @@ def add_entity():
     save_graph(graph)
     return redirect(url_for("index"))
 
-# Route pour supprimer une entité
-@app.route("/delete/<path:entity>", methods=["POST"])
-def delete_entity(entity):
-    graph = load_graph()
-    entity_uri = URIRef(entity)
 
-    # Supprimer toutes les relations liées à cette entité
-    graph.remove((entity_uri, None, None))
-    graph.remove((None, None, entity_uri))
-
-    save_graph(graph)
-    return redirect(url_for("index"))
 
 # Route pour rechercher des entités
 @app.route("/search", methods=["POST"])
@@ -154,29 +139,22 @@ def search():
     return render_template("search_results.html", results=results)
 
 
-# Route pour la recherche avancée
 @app.route("/advanced_search", methods=["POST"])
 def advanced_search():
     graph = load_graph()
-
-    # Récupérer les paramètres de la requête
     entity_type = request.form.get("entity_type")  # Type d'entité à rechercher
     name = request.form.get("name")  # Nom (facultatif)
     department = request.form.get("department")  # Département (facultatif)
     field = request.form.get("field")  # Filière (facultatif)
-
     results = []
 
     if entity_type == "Student":
-        # Construire une requête SPARQL pour rechercher des étudiants
         sparql_query = """
         PREFIX univ: <http://example.org/university/>
         SELECT ?student ?label WHERE {
             ?student a univ:Student ;
                      rdfs:label ?label .
         """
-
-        # Ajouter des filtres si des paramètres sont fournis
         filters = []
         if name:
             filters.append(f'FILTER(CONTAINS(LCASE(?label), LCASE("{name}")))')
@@ -184,69 +162,54 @@ def advanced_search():
             filters.append(f'?student univ:enrolledIn <{field}> .')
         if department:
             filters.append(f'?student univ:enrolledIn ?field . ?field univ:belongsTo <{department}> .')
-
         if filters:
             sparql_query += " " + " ".join(filters)
-
         sparql_query += "}"
-
         for row in graph.query(sparql_query):
             results.append({
                 "uri": str(row.student),
                 "label": str(row.label)
             })
 
-    elif entity_type == "Field":
-        # Construire une requête SPARQL pour rechercher des filières
+    elif entity_type == "Teacher":
         sparql_query = """
         PREFIX univ: <http://example.org/university/>
-        SELECT ?field ?label WHERE {
-            ?field a univ:Field ;
-                   rdfs:label ?label .
+        SELECT ?teacher ?label WHERE {
+            ?teacher a univ:Teacher ;
+                     rdfs:label ?label .
         """
-
-        # Ajouter des filtres si des paramètres sont fournis
         filters = []
         if name:
             filters.append(f'FILTER(CONTAINS(LCASE(?label), LCASE("{name}")))')
         if department:
-            filters.append(f'?field univ:belongsTo <{department}> .')
-
+            filters.append(f'?teacher univ:worksIn <{department}> .')
         if filters:
             sparql_query += " " + " ".join(filters)
-
         sparql_query += "}"
-
         for row in graph.query(sparql_query):
             results.append({
-                "uri": str(row.field),
+                "uri": str(row.teacher),
                 "label": str(row.label)
             })
 
-    elif entity_type == "Course":
-        # Construire une requête SPARQL pour rechercher des cours
+    elif entity_type == "Researcher":
         sparql_query = """
         PREFIX univ: <http://example.org/university/>
-        SELECT ?course ?label WHERE {
-            ?course a univ:Course ;
-                    rdfs:label ?label .
+        SELECT ?researcher ?label WHERE {
+            ?researcher a univ:Researcher ;
+                        rdfs:label ?label .
         """
-
-        # Ajouter des filtres si des paramètres sont fournis
         filters = []
         if name:
             filters.append(f'FILTER(CONTAINS(LCASE(?label), LCASE("{name}")))')
-        if field:
-            filters.append(f'?course univ:offeredBy <{field}> .')
-
+        if department:
+            filters.append(f'?researcher univ:worksIn <{department}> .')
         if filters:
             sparql_query += " " + " ".join(filters)
-
         sparql_query += "}"
-
         for row in graph.query(sparql_query):
             results.append({
-                "uri": str(row.course),
+                "uri": str(row.researcher),
                 "label": str(row.label)
             })
 
@@ -270,34 +233,7 @@ def all_entities():
     return render_template("all_entities.html", entities=entities)
 
 
-# Route pour exporter les données
-@app.route("/export/<format>", methods=["GET"])
-def export_data(format):
-    graph = load_graph()
 
-    if format == "json":
-        data = []
-        for s, p, o in graph:
-            data.append({
-                "subject": str(s),
-                "predicate": str(p),
-                "object": str(o)
-            })
-        return jsonify(data)
-
-    elif format == "xml":
-        root = ET.Element("RDF")
-        for s, p, o in graph:
-            triple = ET.SubElement(root, "Triple")
-            ET.SubElement(triple, "Subject").text = str(s)
-            ET.SubElement(triple, "Predicate").text = str(p)
-            ET.SubElement(triple, "Object").text = str(o)
-        return ET.tostring(root, encoding="unicode")
-
-    elif format == "turtle":
-        return graph.serialize(format="turtle")
-
-    return jsonify({"error": "Format non supporté"}), 400
 
 if __name__ == "__main__":
     app.run(debug=True)

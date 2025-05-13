@@ -10,23 +10,20 @@
     <div class="container">
         <h1>Université Explorer</h1>
 
-        <!-- Formulaire de recherche avancée -->
-        <h2>Recherche Avancée</h2>
         <form action="/advanced_search" method="POST">
             <label for="entity_type">Type d'entité :</label>
             <select id="entity_type" name="entity_type" required>
-                <option value="" disabled selected>-- Sélectionnez un type --</option>
                 <option value="Student">Étudiant</option>
                 <option value="Field">Filière</option>
-                <option value="Course">Cours</option>
+                <option value="Department">Département</option>
             </select>
-
-            <div id="name-field" style="display: none;">
+        
+            <div id="name-field">
                 <label for="name">Nom :</label>
                 <input type="text" id="name" name="name" placeholder="Entrez le nom...">
             </div>
-
-            <div id="department-field" style="display: none;">
+        
+            <div id="department-field">
                 <label for="department">Département :</label>
                 <select id="department" name="department">
                     <option value="">-- Sélectionnez un département --</option>
@@ -35,8 +32,8 @@
                     {% endfor %}
                 </select>
             </div>
-
-            <div id="field-field" style="display: none;">
+        
+            <div id="field-field">
                 <label for="field">Filière :</label>
                 <select id="field" name="field">
                     <option value="">-- Sélectionnez une filière --</option>
@@ -45,9 +42,11 @@
                     {% endfor %}
                 </select>
             </div>
-
+        
             <button type="submit">Rechercher</button>
         </form>
+
+
 
         <script>
             // JavaScript pour afficher/masquer les champs en fonction du type d'entité sélectionné

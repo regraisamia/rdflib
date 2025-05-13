@@ -10,19 +10,56 @@
     <div class="container">
         <h1>Toutes les Entités</h1>
 
+        <!-- Départements -->
+        <h2>Départements</h2>
         <ul>
             {% for entity in entities %}
-                <li>
-                    {{ entity.subject }} - {{ entity.predicate }} - {{ entity.object }}
-                </li>
+                {% if "Department" in entity.object %}
+                    <li>
+                        {{ entity.subject }} - {{ entity.predicate }} - {{ entity.object }}
+                    </li>
+                {% endif %}
             {% endfor %}
         </ul>
 
-        <h2>Exporter les Données</h2>
-        <a href="/export/json">Exporter en JSON</a><br>
-        <a href="/export/xml">Exporter en XML</a><br>
-        <a href="/export/turtle">Exporter en Turtle</a>
+        <!-- Filières -->
+        <h2>Filières</h2>
+        <ul>
+            {% for entity in entities %}
+                {% if "Field" in entity.object %}
+                    <li>
+                        {{ entity.subject }} - {{ entity.predicate }} - {{ entity.object }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
 
+        <!-- Étudiants -->
+        <h2>Étudiants</h2>
+        <ul>
+            {% for entity in entities %}
+                {% if "Student" in entity.object %}
+                    <li>
+                        {{ entity.subject }} - {{ entity.predicate }} - {{ entity.object }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+        <!-- Cours -->
+        <h2>Cours</h2>
+        <ul>
+            {% for entity in entities %}
+                {% if "Course" in entity.object %}
+                    <li>
+                        {{ entity.subject }} - {{ entity.predicate }} - {{ entity.object }}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+        <!-- Lien de retour -->
         <a href="/">Retour à l'accueil</a>
     </div>
 </body>

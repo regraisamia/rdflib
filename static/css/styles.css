@@ -18,7 +18,7 @@ body {
 
 h1 {
     text-align: center;
-    color: #007bff;
+    color: #7b3f6e;
 }
 
 h2 {
@@ -45,7 +45,7 @@ li {
 
 button {
     padding: 5px 10px;
-    background-color: #dc3545;
+    background-color: #461e3e;
     color: white;
     border: none;
     border-radius: 4px;
@@ -54,7 +54,7 @@ button {
 }
 
 button:hover {
-    background-color: #c82333;
+    background-color: #461e3e;
 }
 
 form {
@@ -77,24 +77,26 @@ input, select, button[type="submit"] {
 }
 
 button[type="submit"] {
-    background-color: #007bff;
+    background-color: #7b3f6e;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 button[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #7a2d6a;
 }
 
 a {
     display: block;
     margin-top: 20px;
     text-align: center;
-    color: #007bff;
+    color: #7b3f6e;
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
 }
+
+
